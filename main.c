@@ -74,7 +74,6 @@ void display()
 		printf("%s\t",q.b);
 		printf("%s\t",q.c);
 		printf("%s\t\n\n",q.d);
-		//printf("%d\t\n\n",t.salary);
 
 	}
 	printf("========================================================\n\n");
