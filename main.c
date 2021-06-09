@@ -14,6 +14,26 @@ struct question_t{
 	unsigned int difficulty;
 };
 
+struct question_t *sv_10q(struct question_t *arr[10]){
+    FILE *fp;
+    
+    struct question_t *q;
+
+    fp=fopen(fname,"rb");
+    
+    for(int i = 0; i < 10 ; i++){
+        
+        fread(&q,sizeof(q),1,fp);
+        arr[i] = q;
+        //printf("%s",arr[i]->question);
+    };
+    
+    fclose(fp);
+    
+    return *arr;
+    
+}
+
 void display()
 {
 	FILE *fp;
