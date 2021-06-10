@@ -98,33 +98,33 @@ struct question_t *sv_10q(){
 
 
 void display_all(){
-	FILE *fp;
-	struct question_t q;
-	int i=1;
-	fp=fopen(fname,"rb");
+    FILE *fp;
+    struct question_t q;
+    int i=1;
+    fp=fopen(fname,"rb");
 
-	printf("\n========================================================\n\n");
-	printf("\t\t All question details\n\n");
-	printf("========================================================\n\n");
+    printf("\n========================================================\n\n");
+    printf("\t\t All question details\n\n");
+    printf("========================================================\n\n");
 
-	printf("Question\t\t\tA\t\t\tB\t\t\tC\t\t\tD\tNUMBER\n\n");
-	
-	while(1){
-		fread(&q,sizeof(q),1,fp);
 
-		if(feof(fp)){
-			break;
-		}
-		printf("%s\t\t",q.question);
-		printf("%s\t\t",q.a);
-		printf("%s\t\t",q.b);
-		printf("%s\t\t",q.c);
-		printf("%s\t\t",q.d);
-		printf("%d\t\n\n",i);
-		i++;
-	}
-	printf("========================================================\n\n");
-	fclose(fp);
+    
+    while(1){
+        fread(&q,sizeof(q),1,fp);
+
+        if(feof(fp)){
+            break;
+        }
+        printf("[---Question %d---]\n",i);
+        printf("%s\n",q.question);
+        printf("1. %s\n", q.a);
+        printf("2. %s\n", q.b);
+        printf("3. %s\n", q.c);
+        printf("4. %s\n\n", q.d);
+        i++;
+    }
+    printf("========================================================\n\n");
+    fclose(fp);
 }
 
 void append_ui(){
