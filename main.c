@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include <string.h>
+#include<string.h>
 #include<time.h>
 
 
@@ -191,8 +191,20 @@ int count_qs(){
     fclose(fp);
     return i;	
 }
-
 //-------------------------------------------------------------
+/*void edit_q(){ 
+	Logika:
+		1. printirame vsichki vuprosi vuv originalniq fail;
+		2. otvarqme temp faila i pishem v nego vsichki vurposi do tozi, koito potrebitelqt
+		e izbral da editne (kato v sushtoto vreme chetem ot originalniq fail). 
+		NB!!! ako nqma takuv vpos printirame error;
+		3. kogato stignem to tozi koito trqbva da se editne, pitame potrebitelq za nov vupros
+	    i go zapametqvame vuv temp faila na mqstoto na nomera na vuprosa koit potrebitelq e izbral. 
+		4. prehvurlqme vsichko ot temp faila v original faila 
+		
+		nakraq trqbva da zatvorim failovete
+	
+}*/
 
 void start_game(){
 	struct question_t *questions = sv_10q(); //size=10
@@ -253,6 +265,7 @@ int main(){
     	printf("1. Start game\n");
     	printf("2. Add a question\n");
     	printf("3. Display all available questions\n");
+    	//printf("4. Edit an existing question\n");
     	printf("0. Exit\n\n");
     	printf("Select option: ");    
     	scanf("%d",&o);
@@ -267,13 +280,19 @@ int main(){
 			
 			case 3: display_all();
 			break;
+			
+			// case 4: edit_q();
+			// break;
 						
 			case 0: exit(0);
 			break;
     	}
     }
+
     
 }
+
+
 
 
 
