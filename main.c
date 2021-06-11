@@ -220,7 +220,7 @@ int main(){
 	{"When was Henry VIII born?", " 28th June 1491", "4th July 1478", "6th January 1490", "12th February 1468", 2,1},
 	{"The song God Bless America was originally written for what 1918 musical?", "Oh Lady! Lady!!", "Watch Your Step", "Blossom Time", "Yip, Yip, Yaphank", 4,2},
 	{"Nadia Comaneci was the first gymnast to ever do what at the Olympics?", "Get a perfect 10", "Win an Olympic gold medal", "Win an Olympic gold medal", "Forfeit her position", 2,1},
-	{"Which of these birds has the biggest brain relative to its size?", "Hummingbird", "EagleSparrow", "Ostrich", "ORGOVOR13D", 1,1},
+	{"Which of these birds has the biggest brain relative to its size?", "Hummingbird", "EagleSparrow", "Ostrich", "Eagle", 1,1},
 	{"A person who is not a banker and lends money at an extremely high interest rate is known as what?", "Brother-in-law", "Paper tiger", "Green snake", "Loan Shark", 4,0},
 	{"What name is traditionally given to the party held for a woman who is expecting a baby?", "Baby downpour", "Baby deluge", "Baby shower", "Baby drizzle", 3,0},
 	{"Now used to refer to a cat, the word tabby is derived from the name of a district of what world capital?", "Cairo", "New Delhi", "Baghdad", "Moscow", 3,2},
