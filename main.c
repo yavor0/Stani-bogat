@@ -175,6 +175,22 @@ void append(struct question_t *questions, int size){
 	fclose(fp);
 }
 
+int count_qs(){
+    FILE *fp;
+    struct question_t q;
+    int i=0;
+    fp=fopen(fname,"rb");
+    
+    while(1){
+        fread(&q,sizeof(q),1,fp);
+        if(feof(fp)){
+            break;
+        }
+        i++;
+    }
+    fclose(fp);
+    return i;	
+}
 
 //-------------------------------------------------------------
 
