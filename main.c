@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
-#include<string.h>
+#include <string.h>
 #include<time.h>
 
 
@@ -175,20 +175,90 @@ void append(struct question_t *questions, int size){
 	fclose(fp);
 }
 
+int count_qs(){
+    FILE *fp;
+    struct question_t q;
+    int i=0;
+    fp=fopen(fname,"rb");
+    
+    while(1){
+        fread(&q,sizeof(q),1,fp);
+        if(feof(fp)){
+            break;
+        }
+        i++;
+    }
+    fclose(fp);
+    return i;	
+}
 //-------------------------------------------------------------
-/*void edit_q(){ 
-	Logika:
-		1. printirame vsichki vuprosi vuv originalniq fail;
-		2. otvarqme temp faila i pishem v nego vsichki vurposi do tozi, koito potrebitelqt
-		e izbral da editne (kato v sushtoto vreme chetem ot originalniq fail). 
-		NB!!! ako nqma takuv vpos printirame error;
-		3. kogato stignem to tozi koito trqbva da se editne, pitame potrebitelq za nov vupros
-	    i go zapametqvame vuv temp faila na mqstoto na nomera na vuprosa koit potrebitelq e izbral. 
-		4. prehvurlqme vsichko ot temp faila v original faila 
-		
-		nakraq trqbva da zatvorim failovete
+void edit_q(){ // valio i jordan 
+	FILE *fp,*fp1;
 	
-}*/
+	struct question_t q;
+	int num,found=0;
+
+	fp=fopen(fname,"rb");
+	fp1=fopen("temp.dat","wb");
+	
+	display_all();
+	
+	printf("\nEnter the nmber of the question you want to modify:");
+	scanf("%d",&num);
+	getchar();
+
+	for(int i = 1; i <= count_qs(); i++){
+		fread(&q,sizeof(q),1,fp);
+
+
+		if(i==num){
+			found=1;
+			printf("\nEnter question:");
+			fgets(q.question, sizeof(q.question),stdin);
+			q.question[strlen(q.question)-1] = '\0';
+			
+			printf("\nEnter answer a:");
+			fgets(q.a, sizeof(q.a),stdin);
+			q.a[strlen(q.a)-1] = '\0';
+
+			printf("\nEnter answer b:");
+			fgets(q.b, sizeof(q.b),stdin);
+			q.b[strlen(q.b)-1] = '\0';
+
+			printf("\nEnter answer c:");
+			fgets(q.c, sizeof(q.c),stdin);
+			q.c[strlen(q.c)-1] = '\0';
+			
+			printf("\nEnter answer d:");
+			fgets(q.d, sizeof(q.d),stdin);
+			q.d[strlen(q.d)-1] = '\0';
+			
+			printf("\nEnter correct answer (1-4):");			
+			scanf("%u",&q.answer);
+
+			printf("\nEnter difficulty (0-2):");			
+			scanf("%u",&q.difficulty);
+			fwrite(&q,sizeof(q),1,fp1);
+		}
+		else{
+			fwrite(&q,sizeof(q),1,fp1);
+		}
+	}
+	fclose(fp);
+	fclose(fp1);
+
+
+	fp=fopen(fname,"wb");
+	fp1=fopen("temp.dat","rb");
+	while(1){
+		fread(&q,sizeof(q),1,fp1);
+		if(feof(fp1)){
+			break;
+		}
+		fwrite(&q,sizeof(q),1,fp);
+	}
+
+}
 
 void start_game(){
 	struct question_t *questions = sv_10q(); //size=10
@@ -249,7 +319,7 @@ int main(){
     	printf("1. Start game\n");
     	printf("2. Add a question\n");
     	printf("3. Display all available questions\n");
-    	//printf("4. Edit an existing question\n");
+    	printf("4. Edit an existing question\n");
     	printf("0. Exit\n\n");
     	printf("Select option: ");    
     	scanf("%d",&o);
@@ -265,8 +335,8 @@ int main(){
 			case 3: display_all();
 			break;
 			
-			// case 4: edit_q();
-			// break;
+			case 4: edit_q();
+			break;
 						
 			case 0: exit(0);
 			break;
@@ -275,9 +345,5 @@ int main(){
 
     
 }
-
-
-
-
 
 
