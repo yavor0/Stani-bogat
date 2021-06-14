@@ -191,8 +191,12 @@ int count_qs(){
     fclose(fp);
     return i;	
 }
-//-------------------------------------------------------------
+//------------------------------------------------------------
+
 void edit_q(){ 
+/*
+todo: put question input in a function; add an option for flexible editing (ex. only the question without the answers)
+*/
 	FILE *fp,*fp1;
 	
 	struct question_t q;
