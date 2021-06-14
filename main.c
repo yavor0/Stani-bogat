@@ -192,7 +192,7 @@ int count_qs(){
     return i;	
 }
 //-------------------------------------------------------------
-void edit_q(){ // valio i jordan 
+void edit_q(){ 
 	FILE *fp,*fp1;
 	
 	struct question_t q;
@@ -210,7 +210,9 @@ void edit_q(){ // valio i jordan
 	for(int i = 1; i <= count_qs(); i++){
 		fread(&q,sizeof(q),1,fp);
 
-
+		if(feof(fp)){
+			break;
+		}
 		if(i==num){
 			found=1;
 			printf("\nEnter question:");
@@ -247,17 +249,23 @@ void edit_q(){ // valio i jordan
 	fclose(fp);
 	fclose(fp1);
 
-
-	fp=fopen(fname,"wb");
-	fp1=fopen("temp.dat","rb");
-	while(1){
-		fread(&q,sizeof(q),1,fp1);
-		if(feof(fp1)){
-			break;
-		}
-		fwrite(&q,sizeof(q),1,fp);
+	if(found==0){
+		printf("Sorry no question found\n\n");
 	}
+	else{
+		fp=fopen(fname,"wb");
+		fp1=fopen("temp.dat","rb");
+		while(1){
+			fread(&q,sizeof(q),1,fp1);
+			if(feof(fp1)){
+				break;
+			}
+			fwrite(&q,sizeof(q),1,fp);
+		}
 
+	}
+	fclose(fp);
+	fclose(fp1);
 }
 
 void start_game(){
