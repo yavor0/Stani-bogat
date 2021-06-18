@@ -1,3 +1,4 @@
+
 #include<stdio.h>
 #include<stdlib.h>
 #include <string.h>
@@ -207,7 +208,7 @@ todo: put question input in a function; add an option for flexible editing (ex. 
 	
 	display_all();
 	
-	printf("\nEnter the nmber of the question you want to modify:");
+	printf("\nEnter the number of the question you want to modify:");
 	scanf("%d",&num);
 	getchar();
 
@@ -277,6 +278,7 @@ void start_game(){
 	int round=1;
 	int ans;
 	for(int i=0;i<10;i++,round++){
+        system("clear");
 		printf("[---Question for round %d---]\n",round);
 		printf("%s\n",questions[i].question);
 		
@@ -291,7 +293,8 @@ void start_game(){
 			printf("\nYou lost the game.\nYou played for [%d] rounds\n", round);
 			printf("\n\n");	
 			return;
-		}			
+		}
+		system("clear");
 		
 	}
 	printf("Congratulations! You won!\n\n");
@@ -327,6 +330,7 @@ int main(){
     
     
     while(1){
+        
     	int o;
     	printf("1. Start game\n");
     	printf("2. Add a question\n");
@@ -337,8 +341,9 @@ int main(){
     	scanf("%d",&o);
     	getchar();
     	printf("\n");
+        system("clear");
     	switch(o){
-			case 1: start_game(); 
+			case 1: start_game();
 			break;
 			
 			case 2: append_ui();
@@ -357,5 +362,3 @@ int main(){
 
     
 }
-
-
