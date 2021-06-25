@@ -1,4 +1,3 @@
-
 #include<stdio.h>
 #include<stdlib.h>
 #include <string.h>
@@ -34,6 +33,7 @@ int size_of_file(){
     
     return size - 1;
 }
+
 
 struct question_t rquestion_f(){
     FILE *fp;
@@ -175,126 +175,121 @@ void append(struct question_t *questions, int size){
 	
 	fclose(fp);
 }
-
-int count_qs(){
-    FILE *fp;
-    struct question_t q;
-    int i=0;
-    fp=fopen(fname,"rb");
-    
-    while(1){
-        fread(&q,sizeof(q),1,fp);
-        if(feof(fp)){
-            break;
-        }
-        i++;
+//-----------------------Jokers----------------------------
+char *number_to_answer(struct question_t *q,int ans){
+    switch(ans){
+        case 0: return q->a; 
+        case 1: return q->b;
+        case 2: return q->c;
+        case 3: return q->d;
     }
-    fclose(fp);
-    return i;	
+    return "\0";// to remove the waring
 }
-//------------------------------------------------------------
-
-void edit_q(){ 
-/*
-todo: put question input in a function; add an option for flexible editing (ex. only the question without the answers)
-*/
-	FILE *fp,*fp1;
-	
-	struct question_t q;
-	int num,found=0;
-
-	fp=fopen(fname,"rb");
-	fp1=fopen("temp.dat","wb");
-	
-	display_all();
-	
-	printf("\nEnter the number of the question you want to modify:");
-	scanf("%d",&num);
-	getchar();
-
-	for(int i = 1; i <= count_qs(); i++){
-		fread(&q,sizeof(q),1,fp);
-
-		if(feof(fp)){
-			break;
-		}
-		if(i==num){
-			found=1;
-			printf("\nEnter question:");
-			fgets(q.question, sizeof(q.question),stdin);
-			q.question[strlen(q.question)-1] = '\0';
-			
-			printf("\nEnter answer a:");
-			fgets(q.a, sizeof(q.a),stdin);
-			q.a[strlen(q.a)-1] = '\0';
-
-			printf("\nEnter answer b:");
-			fgets(q.b, sizeof(q.b),stdin);
-			q.b[strlen(q.b)-1] = '\0';
-
-			printf("\nEnter answer c:");
-			fgets(q.c, sizeof(q.c),stdin);
-			q.c[strlen(q.c)-1] = '\0';
-			
-			printf("\nEnter answer d:");
-			fgets(q.d, sizeof(q.d),stdin);
-			q.d[strlen(q.d)-1] = '\0';
-			
-			printf("\nEnter correct answer (1-4):");			
-			scanf("%u",&q.answer);
-
-			printf("\nEnter difficulty (0-2):");			
-			scanf("%u",&q.difficulty);
-			fwrite(&q,sizeof(q),1,fp1);
-		}
-		else{
-			fwrite(&q,sizeof(q),1,fp1);
-		}
-	}
-	fclose(fp);
-	fclose(fp1);
-
-	if(found==0){
-		printf("Sorry no question found\n\n");
-	}
-	else{
-		fp=fopen(fname,"wb");
-		fp1=fopen("temp.dat","rb");
-		while(1){
-			fread(&q,sizeof(q),1,fp1);
-			if(feof(fp1)){
-				break;
-			}
-			fwrite(&q,sizeof(q),1,fp);
-		}
-
-	}
-	fclose(fp);
-	fclose(fp1);
+//-----------------------------------------------------------------------
+void print_q(struct question_t q,int ans1, int ans2 ){
+    printf("%s\n",q.question);
+    for(int i = 0; i < 4;i++){
+        if(i==ans1){
+            printf("%d. %s\n",i+1,number_to_answer(&q,ans1));
+            continue;
+        }
+        if(i==ans2){
+            printf("%d. %s\n",i+1,number_to_answer(&q,ans2));
+            continue;
+        }
+        
+        printf("%d.\n",i+1);
+        
+    }
+	printf("5. Use jokers");
 }
+
+void fiftyfifty(struct question_t q){
+    int rngf=0;
+    int rngs=0;
+    
+    do{
+    rngf = rand() % 4;
+    rngs = rand() % 4;
+    }while(!(rngf != rngs && (q.answer == rngf+1 || q.answer == rngs+1)));
+    
+    printf("\n------%d,%d----\n", rngf+1,rngs+1);
+    
+    print_q(q,rngf,rngs);
+}
+
+void print_available_jokers(int Fiftyfifty,int CallFriend,int Help){
+    printf("-----Choose Joker-----\n");
+    printf("1. 50/50 = %d\n",Fiftyfifty);
+    printf("2. Phone-a-Friend = %d\n",CallFriend);
+    printf("3. Ask the Audience = %d\n",Help);	
+}
+
+void jokers(struct question_t q , int *Fiftyfifty,int *CallFriend,int *Help) {
+	int choise;
+    print_available_jokers(*Fiftyfifty, *CallFriend, *Help);
+    printf("\nEnter the joker: ");
+    scanf("%d",&choise);
+    
+    if(*Fiftyfifty == 1 && choise == 1){
+        fiftyfifty(q);
+        *Fiftyfifty = 0;
+        //*flag = 1;
+        
+        return;
+    };
+    if(*CallFriend == 1 && choise == 2){
+        //callfriend();
+        *CallFriend = 0;
+        return;
+    };
+    if(*Help == 1 && choise == 3){
+        //help();
+        *Help = 0;
+        return;
+    };
+    printf("This joker is used!\n");
+}
+
+//-------------------------------------------------------------
 
 void start_game(){
 	struct question_t *questions = sv_10q(); //size=10
 	int round=1;
 	int ans;
+    
+    int Fiftyfifty = 1;
+    int CallFriend = 1;
+    int Help = 1;
+
+    
+    
 	for(int i=0;i<10;i++,round++){
-        system("clear");
 		printf("[---Question for round %d---]\n",round);
+    	print_available_jokers(Fiftyfifty, CallFriend, Help);
+        printf("\n");
 		printf("%s\n",questions[i].question);
 		
 		printf("1. %s\n", questions[i].a);
 		printf("2. %s\n", questions[i].b);
 		printf("3. %s\n", questions[i].c);
 		printf("4. %s\n", questions[i].d);
-		
+		printf("5. Use Jokers\n");
+        
+        a:
 		printf("\nEnter the correct answer: ");
 		scanf("%d",&ans);
+        if(ans == 5){
+
+		jokers(questions[i], &Fiftyfifty, &CallFriend, &Help);
+        goto a;
+            
+        }
 		if(ans != questions[i].answer){
 			printf("\nYou lost the game.\nYou played for [%d] rounds\n", round);
 			printf("\n\n");	
 			return;
-		}
-		system("clear");
+		}			
 		
 	}
 	printf("Congratulations! You won!\n\n");
@@ -308,10 +303,10 @@ int main(){
 	{"Compiled by Benjamin Franklin in 1737, The Drinker's Dictionary  included all but which of these synonyms for drunkenness?", "Nimptopsical", "Buzzey", "Staggerish", "Pifflicated", 4,2},
 	{" What do egals usually eat?", "Fruit", "Meat", "Worms", "Leaves", 3,1},	
 	{"In the children’s book series, where is Paddington Bear originally from?", " Iceland", "Peru", "India", "Canada", 2,2},
-	{"What animal is the tallest?", "Giraff", "Lion", " Horse", "Cat", 1,0},	
+	{"What animal is the tallest?", "Giraff", "Lion", "Horse", "Cat", 1,0},	
 	{"What letter must appear on the beginning of the registration number of all non-military aircraft in the US?", "A", "U", "L", "N", 4,2},
 	{"What first lady was a ninth-generation descendant of Pocahontas?", "Edith Wilson", "Helen Taft", "Bess Truman", "Mamie Eisenhower", 1,1},	
-	{"The US icon Uncle Sam was based on Samuel Wilson who worked during the War of 1812 as a what?", "Mail deliverer", "Meat inspector", "Historian", "Weapons mechani", 2,2},
+	{"The US icon Uncle Sam was based on Samuel Wilson who worked during the War of 1812 as a what?", "Mail deliverer", "Meat inspector", "Historian", "Weapons mechanic", 2,2},
 	{"Khrushchev's famous 1960 shoe-banging outburst at the UN was in response to a delegate from what nation?", "Austria", "The Philippines", "Turkey", "Spain", 3,2},	
 	{"Where did Scotch whisky originate?", "Belgium", "Spain", "Ireland", "Wales", 3,0},
 	{"When was Henry VIII born?", " 28th June 1491", "4th July 1478", "6th January 1490", "12th February 1468", 2,1},
@@ -330,20 +325,17 @@ int main(){
     
     
     while(1){
-        
     	int o;
     	printf("1. Start game\n");
     	printf("2. Add a question\n");
     	printf("3. Display all available questions\n");
-    	printf("4. Edit an existing question\n");
     	printf("0. Exit\n\n");
     	printf("Select option: ");    
     	scanf("%d",&o);
     	getchar();
     	printf("\n");
-        system("clear");
     	switch(o){
-			case 1: start_game();
+			case 1: start_game(); 
 			break;
 			
 			case 2: append_ui();
@@ -351,14 +343,10 @@ int main(){
 			
 			case 3: display_all();
 			break;
-			
-			case 4: edit_q();
-			break;
 						
 			case 0: exit(0);
 			break;
     	}
     }
-
     
 }
