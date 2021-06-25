@@ -175,6 +175,102 @@ void append(struct question_t *questions, int size){
 	
 	fclose(fp);
 }
+int count_qs(){
+    FILE *fp;
+    struct question_t q;
+    int i=0;
+    fp=fopen(fname,"rb");
+    
+    while(1){
+        fread(&q,sizeof(q),1,fp);
+        if(feof(fp)){
+            break;
+        }
+        i++;
+    }
+    fclose(fp);
+    return i;	
+}
+//------------------------------------------------------------
+
+void edit_q(){ 
+/*
+todo: put question input in a function; add an option for flexible editing (ex. only the question without the answers)
+*/
+	FILE *fp,*fp1;
+	
+	struct question_t q;
+	int num,found=0;
+
+	fp=fopen(fname,"rb");
+	fp1=fopen("temp.dat","wb");
+	
+	display_all();
+	
+	printf("\nEnter the nmber of the question you want to modify:");
+	scanf("%d",&num);
+	getchar();
+
+	for(int i = 1; i <= count_qs(); i++){
+		fread(&q,sizeof(q),1,fp);
+
+		if(feof(fp)){
+			break;
+		}
+		if(i==num){
+			found=1;
+			printf("\nEnter question:");
+			fgets(q.question, sizeof(q.question),stdin);
+			q.question[strlen(q.question)-1] = '\0';
+			
+			printf("\nEnter answer a:");
+			fgets(q.a, sizeof(q.a),stdin);
+			q.a[strlen(q.a)-1] = '\0';
+
+			printf("\nEnter answer b:");
+			fgets(q.b, sizeof(q.b),stdin);
+			q.b[strlen(q.b)-1] = '\0';
+
+			printf("\nEnter answer c:");
+			fgets(q.c, sizeof(q.c),stdin);
+			q.c[strlen(q.c)-1] = '\0';
+			
+			printf("\nEnter answer d:");
+			fgets(q.d, sizeof(q.d),stdin);
+			q.d[strlen(q.d)-1] = '\0';
+			
+			printf("\nEnter correct answer (1-4):");			
+			scanf("%u",&q.answer);
+
+			printf("\nEnter difficulty (0-2):");			
+			scanf("%u",&q.difficulty);
+			fwrite(&q,sizeof(q),1,fp1);
+		}
+		else{
+			fwrite(&q,sizeof(q),1,fp1);
+		}
+	}
+	fclose(fp);
+	fclose(fp1);
+
+	if(found==0){
+		printf("Sorry no question found\n\n");
+	}
+	else{
+		fp=fopen(fname,"wb");
+		fp1=fopen("temp.dat","rb");
+		while(1){
+			fread(&q,sizeof(q),1,fp1);
+			if(feof(fp1)){
+				break;
+			}
+			fwrite(&q,sizeof(q),1,fp);
+		}
+
+	}
+	fclose(fp);
+	fclose(fp1);
+}
 //-----------------------Jokers----------------------------
 char *number_to_answer(struct question_t *q,int ans){
     switch(ans){
@@ -329,6 +425,7 @@ int main(){
     	printf("1. Start game\n");
     	printf("2. Add a question\n");
     	printf("3. Display all available questions\n");
+    	printf("4. Edit question\n");
     	printf("0. Exit\n\n");
     	printf("Select option: ");    
     	scanf("%d",&o);
@@ -342,6 +439,9 @@ int main(){
 			break;
 			
 			case 3: display_all();
+			break;
+					
+			case 4: edit_q();
 			break;
 						
 			case 0: exit(0);
