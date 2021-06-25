@@ -6,6 +6,7 @@
 
 char fname[]={"questions.dat"};
 
+
 struct question_t{
 	char question[300];
 	char a[50];
@@ -15,7 +16,7 @@ struct question_t{
 	unsigned int answer;	
 	unsigned int difficulty;
 };
-
+int fifty_arr[3];
 
 int size_of_file(){
     FILE *fp;
@@ -175,6 +176,7 @@ void append(struct question_t *questions, int size){
 	
 	fclose(fp);
 }
+
 int count_qs(){
     FILE *fp;
     struct question_t q;
@@ -271,6 +273,7 @@ todo: put question input in a function; add an option for flexible editing (ex. 
 	fclose(fp);
 	fclose(fp1);
 }
+
 //-----------------------Jokers----------------------------
 char *number_to_answer(struct question_t *q,int ans){
     switch(ans){
@@ -297,7 +300,6 @@ void print_q(struct question_t q,int ans1, int ans2 ){
         printf("%d.\n",i+1);
         
     }
-	printf("5. Use jokers");
 }
 
 void fiftyfifty(struct question_t q){
@@ -308,10 +310,12 @@ void fiftyfifty(struct question_t q){
     rngf = rand() % 4;
     rngs = rand() % 4;
     }while(!(rngf != rngs && (q.answer == rngf+1 || q.answer == rngs+1)));
+    fifty_arr[0] = rngf+1;
+    fifty_arr[1] = rngs+1;
     
     printf("\n------%d,%d----\n", rngf+1,rngs+1);
-    
     print_q(q,rngf,rngs);
+    
 }
 
 void print_available_jokers(int Fiftyfifty,int CallFriend,int Help){
@@ -321,7 +325,45 @@ void print_available_jokers(int Fiftyfifty,int CallFriend,int Help){
     printf("3. Ask the Audience = %d\n",Help);	
 }
 
-void jokers(struct question_t q , int *Fiftyfifty,int *CallFriend,int *Help) {
+void callfriend(struct question_t q, int flag_fifty){
+    int probability = rand() % 101;
+    int ans;
+
+    
+	if(q.difficulty == 0 && probability <= 80){
+		ans = q.answer;	
+		printf("Your friend says {%d} is the correct answer.\n", ans);
+		return;
+	}
+	if(q.difficulty == 1 && probability <= 60){
+		ans = q.answer;
+		printf("Your friend says {%d} is the correct answer.\n", ans);
+		return;	
+	}
+	if(q.difficulty == 2 && probability <= 30){
+		ans = q.answer;
+		printf("Your friend says {%d} is the correct answer.\n", ans);
+		return;	
+	}
+	
+    if(flag_fifty){
+		if(q.answer == fifty_arr[0]){
+			ans = fifty_arr[1];
+		}
+		else{
+			ans = fifty_arr[0];
+		}
+    }
+    else{
+		do{
+			ans = rand() % 4;
+		}while(ans != q.answer);
+	}
+	printf("Your friend says {%d} is the correct answer.\n", ans);
+	
+}
+
+void jokers(struct question_t q , int *Fiftyfifty,int *CallFriend,int *Help, int *flag_fifty) {
 	int choise;
     print_available_jokers(*Fiftyfifty, *CallFriend, *Help);
     printf("\nEnter the joker: ");
@@ -329,13 +371,12 @@ void jokers(struct question_t q , int *Fiftyfifty,int *CallFriend,int *Help) {
     
     if(*Fiftyfifty == 1 && choise == 1){
         fiftyfifty(q);
+        *flag_fifty = 1;
         *Fiftyfifty = 0;
-        //*flag = 1;
-        
         return;
     };
     if(*CallFriend == 1 && choise == 2){
-        //callfriend();
+        callfriend(q, *flag_fifty);
         *CallFriend = 0;
         return;
     };
@@ -358,7 +399,7 @@ void start_game(){
     int CallFriend = 1;
     int Help = 1;
 
-    
+    int flag_fifty = 0;
     
 	for(int i=0;i<10;i++,round++){
 		printf("[---Question for round %d---]\n",round);
@@ -370,22 +411,23 @@ void start_game(){
 		printf("2. %s\n", questions[i].b);
 		printf("3. %s\n", questions[i].c);
 		printf("4. %s\n", questions[i].d);
-		printf("5. Use Jokers\n");
+
         
         a:
-		printf("\nEnter the correct answer: ");
+		printf("5. Use Jokers\n");
+		printf("\nEnter your option: ");
 		scanf("%d",&ans);
         if(ans == 5){
-
-		jokers(questions[i], &Fiftyfifty, &CallFriend, &Help);
-        goto a;
+			jokers(questions[i], &Fiftyfifty, &CallFriend, &Help, &flag_fifty);
+        	goto a;
             
         }
 		if(ans != questions[i].answer){
 			printf("\nYou lost the game.\nYou played for [%d] rounds\n", round);
 			printf("\n\n");	
 			return;
-		}			
+		}
+		flag_fifty=0;			
 		
 	}
 	printf("Congratulations! You won!\n\n");
@@ -407,13 +449,13 @@ int main(){
 	{"Where did Scotch whisky originate?", "Belgium", "Spain", "Ireland", "Wales", 3,0},
 	{"When was Henry VIII born?", " 28th June 1491", "4th July 1478", "6th January 1490", "12th February 1468", 2,1},
 	{"The song God Bless America was originally written for what 1918 musical?", "Oh Lady! Lady!!", "Watch Your Step", "Blossom Time", "Yip, Yip, Yaphank", 4,2},
-	{"Nadia Comaneci was the first gymnast to ever do what at the Olympics?", "Get a perfect 10", "Win an Olympic gold medal", "Win an Olympic gold medal", "Forfeit her position", 2,1},
+	{"Nadia Comaneci was the first gymnast to ever do what at the Olympics?", "Get a perfect 10", "Win an Olympic gold medal", "Win an Olympic gold medal", "Forfeit her position", 1,1},
 	{"Which of these birds has the biggest brain relative to its size?", "Hummingbird", "EagleSparrow", "Ostrich", "Eagle", 1,1},
 	{"A person who is not a banker and lends money at an extremely high interest rate is known as what?", "Brother-in-law", "Paper tiger", "Green snake", "Loan Shark", 4,0},
-	{"What name is traditionally given to the party held for a woman who is expecting a baby?", "Baby downpour", "Baby deluge", "Baby shower", "Baby drizzle", 3,0},
+	{"What name is traditionally given to the party held for a woman who is expecting a baby?", "Baby downpour", "Baby shower", "Baby deluge", "Baby drizzle", 2,0},
 	{"Now used to refer to a cat, the word tabby is derived from the name of a district of what world capital?", "Cairo", "New Delhi", "Baghdad", "Moscow", 3,2},
-	{" The national flag of which of these countries does not feature three horizontal stripes?", "Russia", "Meat", "Romania", " Bulgaria", 3,1},
-	{" The popular children's song It's Raining, It's Pouring mentions an old man  doing what?", "Yelling at squirrels", "Laughing", "Snoring", "Cooking", 1,0},
+	{"The national flag of which of these countries does not feature three horizontal stripes?", "Russia", "Meat", "Romania", "Bulgaria", 3,1},
+	{"The popular children's song It's Raining, It's Pouring mentions an old man  doing what?", "Yelling at squirrels", "Laughing", "Snoring", "Cooking", 1,0},
 		
 	};
 	append(questions, sizeof(questions)/sizeof(questions[0]));
@@ -440,10 +482,10 @@ int main(){
 			
 			case 3: display_all();
 			break;
-					
+			
 			case 4: edit_q();
 			break;
-						
+	
 			case 0: exit(0);
 			break;
     	}
