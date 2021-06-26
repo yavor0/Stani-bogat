@@ -275,6 +275,38 @@ todo: put question input in a function; add an option for flexible editing (ex. 
 }
 
 //-----------------------Jokers----------------------------
+
+int find_max(int *arr){
+	int a=arr[0];
+	for(int i=0; i<4; i++){
+		if(arr[i] > a){
+			a=arr[i];
+		}
+	}
+	return a;
+}
+
+void fill_arr(int *arr){
+	for(int i=0;i<4;i++){
+		arr[i]=-1;
+	}
+}
+
+int val_not_in_arr(int r ,int *arr){
+	for(int i =0;i<4;i++){
+		if(arr[i] == -1){
+			break;
+		}
+		else if(arr[i] == r){
+			return 0;
+		}
+		
+	}
+	return 1;
+}
+
+
+
 char *number_to_answer(struct question_t *q,int ans){
     switch(ans){
         case 0: return q->a; 
@@ -307,8 +339,8 @@ void fiftyfifty(struct question_t q){
     int rngs=0;
     
     do{
-    rngf = rand() % 4;
-    rngs = rand() % 4;
+		rngf = rand() % 4;
+		rngs = rand() % 4;
     }while(!(rngf != rngs && (q.answer == rngf+1 || q.answer == rngs+1)));
     fifty_arr[0] = rngf+1;
     fifty_arr[1] = rngs+1;
@@ -357,10 +389,63 @@ void callfriend(struct question_t q, int flag_fifty){
     else{
 		do{
 			ans = rand() % 4;
-		}while(ans != q.answer);
+			ans++;
+		}while(ans == q.answer);
 	}
 	printf("Your friend says {%d} is the correct answer.\n", ans);
 	
+}
+
+void help(struct question_t q){
+    int probability = rand() % 101;
+    
+	int arr[4];
+	arr[0] = rand() % 101;
+	arr[1] = rand() % (101-arr[0]);
+	arr[2] = rand() % (101-(arr[0]+arr[1]));
+	arr[3] = 100 - (arr[0]+arr[1]+arr[2]);
+	int r;
+    int ans;
+
+
+    int tmp_arr[4];
+    int j=0;
+    fill_arr(tmp_arr);
+    
+	if(q.difficulty == 0 && probability <= 80){
+		ans = q.answer;	
+	}
+	else if(q.difficulty == 1 && probability <= 60){
+		ans = q.answer;
+	}
+	else if(q.difficulty == 2 && probability <= 30){
+		ans = q.answer;
+	}
+	else{
+		do{
+			ans = rand() % 4;
+			ans++;
+		}while(ans == q.answer);	
+	}
+	//printf("ANS: %d\n",ans);
+	
+	for(int i=0;i<4;i++){
+		if(ans == i+1){
+        	printf("%d. %s ---- %d%% \n",i+1,number_to_answer(&q,i),find_max(arr));
+		}
+		else{		
+			do{
+				r = rand() % 4;
+			}while(!(val_not_in_arr(r, tmp_arr) && arr[r] != find_max(arr)));
+
+			tmp_arr[j] = r;
+			j++;
+        	printf("%d. %s ---- %d%% \n",i+1, number_to_answer(&q,i), arr[r]);
+        }
+	}
+	/*for(int i=0;i<4;i++){
+		printf("\n%d--\n",tmp_arr[i]);
+	}*/
 }
 
 void jokers(struct question_t q , int *Fiftyfifty,int *CallFriend,int *Help, int *flag_fifty) {
@@ -381,7 +466,7 @@ void jokers(struct question_t q , int *Fiftyfifty,int *CallFriend,int *Help, int
         return;
     };
     if(*Help == 1 && choise == 3){
-        //help();
+        help(q);
         *Help = 0;
         return;
     };
@@ -436,7 +521,7 @@ void start_game(){
 int main(){
 	srand(time(0));
 	struct question_t questions[] = {
-	{"A person with well-developed abdominal muscles is said to have a what?", "One-pack", "Six pack", "12-pack", "Family-pack", 2,0},
+	{"A person with well-developed abdominal muscles is said to have a what?", "One-pack", "Family pack", "12-pack", "Six pack", 4,0},
 	{"What sort of animal is Walt Disney's Dumbo?", "Elephant", "Deer", "Donkey", "Lion", 1,1},	
 	{"Compiled by Benjamin Franklin in 1737, The Drinker's Dictionary  included all but which of these synonyms for drunkenness?", "Nimptopsical", "Buzzey", "Staggerish", "Pifflicated", 4,2},
 	{" What do egals usually eat?", "Fruit", "Meat", "Worms", "Leaves", 3,1},	
@@ -455,7 +540,7 @@ int main(){
 	{"What name is traditionally given to the party held for a woman who is expecting a baby?", "Baby downpour", "Baby shower", "Baby deluge", "Baby drizzle", 2,0},
 	{"Now used to refer to a cat, the word tabby is derived from the name of a district of what world capital?", "Cairo", "New Delhi", "Baghdad", "Moscow", 3,2},
 	{"The national flag of which of these countries does not feature three horizontal stripes?", "Russia", "Meat", "Romania", "Bulgaria", 3,1},
-	{"The popular children's song It's Raining, It's Pouring mentions an old man  doing what?", "Yelling at squirrels", "Laughing", "Snoring", "Cooking", 1,0},
+	{"The popular children's song It's Raining, It's Pouring mentions an old man  doing what?", "Cooking", "Laughing", "Snoring", "Yelling at squirrels", 4,0},
 		
 	};
 	append(questions, sizeof(questions)/sizeof(questions[0]));
