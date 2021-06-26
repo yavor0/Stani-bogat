@@ -396,7 +396,7 @@ void callfriend(struct question_t q, int flag_fifty){
 	
 }
 
-void help(struct question_t q){
+void help(struct question_t q,int flag_fifty){
     int probability = rand() % 101;
     
 	int arr[4];
@@ -410,6 +410,9 @@ void help(struct question_t q){
 
     int tmp_arr[4];
     int j=0;
+    
+
+    
     fill_arr(tmp_arr);
     
 	if(q.difficulty == 0 && probability <= 80){
@@ -428,6 +431,20 @@ void help(struct question_t q){
 		}while(ans == q.answer);	
 	}
 	//printf("ANS: %d\n",ans);
+    if(flag_fifty){
+        for(int m = 0; m < 4; m++){
+            if(fifty_arr[0] == m+1){
+                printf("%d. %s ---- %d%% \n",m+1,number_to_answer(&q,m),arr[0]);
+                continue;
+            }
+            if(fifty_arr[1] == m+1){
+                printf("%d. %s ---- %d%% \n",m+1,number_to_answer(&q,m),100 - arr[0]);
+                continue;
+            }
+            printf("%d.\n",m+1);
+        }
+        return;
+    }
 	
 	for(int i=0;i<4;i++){
 		if(ans == i+1){
@@ -466,7 +483,7 @@ void jokers(struct question_t q , int *Fiftyfifty,int *CallFriend,int *Help, int
         return;
     };
     if(*Help == 1 && choise == 3){
-        help(q);
+        help(q,*flag_fifty);
         *Help = 0;
         return;
     };
