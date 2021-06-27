@@ -120,15 +120,15 @@ extern void display_all(){
     fclose(fp);
 }
 
-extern void append_ui(){
+extern void append_ui(){ // dobavq vupros ot terminala
 	FILE *fp;
 	struct question_t q;
 	
-	fp=fopen(fname,"ab");
+	fp=fopen(fname,"ab"); // append to binary
 
 	printf("\nEnter question:");
-	fgets(q.question, sizeof(q.question),stdin);
-	q.question[strlen(q.question)-1] = '\0';
+	fgets(q.question, sizeof(q.question),stdin); // chetem string ot terminala
+	q.question[strlen(q.question)-1] = '\0'; // maha new lina ot stringa
 	
 	printf("\nEnter answer a:");
 	fgets(q.a, sizeof(q.a),stdin);
@@ -147,7 +147,7 @@ extern void append_ui(){
 	q.d[strlen(q.d)-1] = '\0';
 	
 	printf("\nEnter correct answer (1-4):");			
-	scanf("%u",&q.answer);
+	scanf("%u",&q.answer); 
 	// todo: if diff != (1-3)
 	printf("\nEnter difficulty (0-2):");			
 	scanf("%u",&q.difficulty);
@@ -168,7 +168,7 @@ extern void append(struct question_t *questions, int size){
 	fclose(fp);
 }
 
-extern int count_qs(){
+extern int count_qs(){ // vrushta kolko vuprosa ima vuv faila
     FILE *fp;
     struct question_t q;
     int i=0;
@@ -190,35 +190,35 @@ extern void edit_q(){
 /*
 todo: put question input in a function; add an option for flexible editing (ex. only the question without the answers)
 */
-	FILE *fp,*fp1;
+	FILE *fp,*fp1; //ptr za failove
 	
-	struct question_t q;
+	struct question_t q; // structura za noviq vupros
 	int num,found=0;
 
-	fp=fopen(fname,"rb");
-	fp1=fopen("temp.dat","wb");
+	fp=fopen(fname,"rb"); // original file
+	fp1=fopen("temp.dat","wb"); // tmp file za zapametqvane na noviq vupros
 	
-	display_all();
+	display_all(); // displayvame vsichki vuprosi
 	
-	printf("\nEnter the nmber of the question you want to modify:");
-	scanf("%d",&num);
+	printf("\nEnter the number of the question you want to modify: ");
+	scanf("%d",&num); // chetem nomera na vuprosa, koito iskame da editnem
 	getchar();
 
 	for(int i = 1; i <= count_qs(); i++){
-		fread(&q,sizeof(q),1,fp);
+		fread(&q,sizeof(q),1,fp); // chetem vuprosite ot original file
 
-		if(feof(fp)){
+		if(feof(fp)){ // ako sme stignali kraq na faila breakvame
 			break;
 		}
 		if(i==num){
-			found=1;
+			found=1; // indikirame che sme namerili vuprosa
 			printf("\nEnter question:");
 			fgets(q.question, sizeof(q.question),stdin);
 			q.question[strlen(q.question)-1] = '\0';
 			
 			printf("\nEnter answer a:");
 			fgets(q.a, sizeof(q.a),stdin);
-			q.a[strlen(q.a)-1] = '\0';
+			q.a[strlen(q.a)-1] = '\0'; // premahva new lina ot fgets
 
 			printf("\nEnter answer b:");
 			fgets(q.b, sizeof(q.b),stdin);
@@ -240,24 +240,24 @@ todo: put question input in a function; add an option for flexible editing (ex. 
 			fwrite(&q,sizeof(q),1,fp1);
 		}
 		else{
-			fwrite(&q,sizeof(q),1,fp1);
+			fwrite(&q,sizeof(q),1,fp1); // zapisvame vuprosa v noviq file 
 		}
 	}
 	fclose(fp);
 	fclose(fp1);
-
+//-----
 	if(found==0){
 		printf("Sorry no question found\n\n");
 	}
 	else{
-		fp=fopen(fname,"wb");
-		fp1=fopen("temp.dat","rb");
+		fp=fopen(fname,"wb"); // oroginalen file otvarqme v mode write binary
+		fp1=fopen("temp.dat","rb"); // tmp file otvarqme v mode read binary
 		while(1){
-			fread(&q,sizeof(q),1,fp1);
-			if(feof(fp1)){
+			fread(&q,sizeof(q),1,fp1); // chetem ot tmp file
+			if(feof(fp1)){ // ako sme stignali kraq na faila breakvame
 				break;
 			}
-			fwrite(&q,sizeof(q),1,fp);
+			fwrite(&q,sizeof(q),1,fp); // pishem v originalniq file ot tmp file
 		}
 
 	}
