@@ -1,15 +1,10 @@
 #include<stdio.h>
-
 #include<stdlib.h>
-
 #include<string.h>
-
 #include<time.h>
 
 #include "./question.h"
-
 #include "./hints.h"
-
 #include "./file_work.h"
 
 
