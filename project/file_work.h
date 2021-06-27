@@ -7,8 +7,6 @@
 char fname[]={"questions.dat"};
 
 
-
-
 extern int size_of_file(){
     FILE *fp;
     int size = 0;
