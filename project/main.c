@@ -77,6 +77,22 @@ int main(){
 	{"Now used to refer to a cat, the word tabby is derived from the name of a district of what world capital?", "Cairo", "New Delhi", "Baghdad", "Moscow", 3,2},
 	{"The national flag of which of these countries does not feature three horizontal stripes?", "Russia", "Meat", "Romania", "Bulgaria", 3,1},
 	{"The popular children's song It's Raining, It's Pouring mentions an old man  doing what?", "Cooking", "Laughing", "Snoring", "Yelling at squirrels", 4,0},
+	{"Which of the following singers has won the award for best bulgarian pop folk singer the most times?", "Galena", "Anelia", "Preslava", "Lorena", 3,1},
+	{"On September 14, 2013, Floyd Mayweather must defend his WBA title against any of the  boxers listed?", "Juan Manuel Márquez", "Canelo Alvarez", "José Luis Castillo", "Felipe Garcia", 2,2}
+	{"What name is given to the revolving belt machinery in an airport that delivers checked luggage from the plane to baggage reclaim?", "Hangar","Concourse","Carousel","Terminal", 3,1},
+	{"The hammer and sickle is one of the most recognisable symbols of which political ideology?", "Republicanism", "Communism", "Conservatism" , "Liberalism", 2,1},
+	{"Construction of which of these famous landmarks was completed first?" , "Empire State Building", "Royal Albert Hall","Eiffel Tower","Big Ben Clock Tower",4,2},
+	{"Which of these cetaceans is classified as a “toothed whale?","Gray whale","Sperm whale","Humback whale","Minke whale",2,2},
+	{"Who is the only British politician to have held all four “Great Offices of State” at some point during their career?","David Lloyd George","Harold Wilson","James Callaghan","John Major",3,2},
+	{"Which of these brands was chiefly associated with the manufacture of household locks?", "Phillips","Ronseal","Chubb","Flymo",3,0},
+	{"Obstetrics is a branch of medicine particularly concerned with what?","Childbirth","Broken bones","Heart conditions"," Old age",1,1},
+	{"What does the word loquacious mean?","Angry","Chatty","Beautiful","Shy",2,0},
+	{"Who is the only British politician to have held all four Great Offices of State at some point during their career? ","David Lloyd George","Harold Wilson","John Major","James Callaghan",4,2},
+	{"At the closest point, which island group is only 50 miles south-east of the coast of Florida? ","Bahamas","US Virgin Islands","Turks and Caicos Islands"," Bermuda",1,1},
+	{"The famous  bulgarian influencer Stoyan Kolev is from which city ? ","Burgas","Sofia","Varna","Plovdiv",1,0},
+	{"After the suspension of the Slavi 's show of Fame on BTV comes the show of a brand new show with a new host. What is the origin of a new host of the show","Bulgarian","Greek","American","Italian",2,0},
+		
+		
 		
 	};
 	append(questions, sizeof(questions)/sizeof(questions[0]));
