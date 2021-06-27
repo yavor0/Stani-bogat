@@ -3,7 +3,7 @@
 #include <string.h>
 #include<time.h>
 
-//#include "./question.h"
+
 char fname[]={"questions.dat"};
 
 
